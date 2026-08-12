@@ -1,0 +1,16 @@
+# Environment / secrets
+.env
+
+# Composer
+/vendor/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE / editor
+.idea/
+.vscode/
+
+# Local development
+**/todo.txt
