@@ -1,6 +1,6 @@
 <?php
   session_start();
-
+  $lang = require_once __DIR__ . '/actions/language.php';
   $config = require_once __DIR__ . '/config/config.php';
 
   $site = $config['site'];
@@ -20,74 +20,240 @@
 ?>
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title><?= htmlspecialchars($site['title'], ENT_QUOTES, 'UTF-8') ?></title>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>
+        <?= htmlspecialchars($site['title'], ENT_QUOTES, 'UTF-8') ?>
+    </title>
 
     <link
-      rel="stylesheet"
-      type="text/css"
-      href="./css/main.css"
-    />
+        rel="stylesheet"
+        type="text/css"
+        href="./css/main.css"
+    >
+</head>
 
-  </head>
-  <body>
-    <div >
-     <h1><?= htmlspecialchars($site['domain'], ENT_QUOTES, 'UTF-8') ?></h1>
-     <p><?= htmlspecialchars($site['description'], ENT_QUOTES, 'UTF-8') ?></p>
+<body>
 
-    <?php if ($errors): ?>
+    <div class="language-picker">
 
-        <div class="popup error" id="popup">
+        <div class="language-picker">
 
-            <strong>Error:</strong>
+            <?php foreach ($supportedLanguages as $language): ?>
 
-            <ul>
-                <?php foreach ($errors as $error): ?>
+                <form action="./actions/language.php" method="POST">
 
-                    <li>
-                        <?= htmlspecialchars($error, ENT_QUOTES, 'UTF-8') ?>
-                    </li>
+                    <input
+                        type="hidden"
+                        name="language"
+                        value="<?= htmlspecialchars($language, ENT_QUOTES, 'UTF-8') ?>"
+                    >
 
-                <?php endforeach; ?>
-            </ul>
+                    <button
+                        type="submit"
+                        class="<?= $language === $currentLanguage ? 'active' : '' ?>"
+                    >
+                        <?= strtoupper(htmlspecialchars($language, ENT_QUOTES, 'UTF-8')) ?>
+                    </button>
+
+                </form>
+
+            <?php endforeach; ?>
 
         </div>
 
-    <?php elseif ($success): ?>
-
-        <div class="popup success" id="popup">
-            <strong>Success:</strong>
-            <?= htmlspecialchars($success, ENT_QUOTES, 'UTF-8') ?>
-        </div>
-
-    <?php endif; ?>
-
-    <form action="./actions/submit.php" method="POST">
-        <input 
-          type="text" 
-          name="name" 
-          placeholder="Your name..." 
-          value="<?= htmlspecialchars($name, ENT_QUOTES, 'UTF-8') ?>"
-          required />
-        <input
-          type="email"
-          name="email"
-          placeholder="Your email..."
-          value="<?= htmlspecialchars($email, ENT_QUOTES, 'UTF-8') ?>"
-          required
-        >
-        <textarea
-            name="message"
-            rows="6"
-            cols="50"
-            placeholder="Your message..."
-            required
-        ><?= htmlspecialchars($message, ENT_QUOTES, 'UTF-8') ?></textarea>
-        <button type="submit">Send</button>
-    </form>
     </div>
+
+    <main class="page">
+
+        <section class="card">
+
+            <div class="domain-icon">
+                ✦
+            </div>
+
+            <div class="domain-label">
+                <?= htmlspecialchars($lang['domain_for_sale'], ENT_QUOTES, 'UTF-8') ?>
+            </div>
+
+            <h1>
+                <?= htmlspecialchars($site['domain'], ENT_QUOTES, 'UTF-8') ?>
+            </h1>
+
+            <p class="description">
+                <?= htmlspecialchars($site['description'], ENT_QUOTES, 'UTF-8') ?>
+            </p>
+
+
+            <?php if ($errors): ?>
+
+                <div class="popup error" id="popup">
+
+                    <div class="popup-title">
+                        <?= htmlspecialchars($lang['error'], ENT_QUOTES, 'UTF-8') ?>
+                    </div>
+
+                    <ul>
+                        <?php foreach ($errors as $error): ?>
+
+                            <li>
+                                <?= htmlspecialchars(
+                                    $error,
+                                    ENT_QUOTES,
+                                    'UTF-8'
+                                ) ?>
+                            </li>
+
+                        <?php endforeach; ?>
+                    </ul>
+
+                </div>
+
+            <?php elseif ($success): ?>
+
+                <div class="popup success" id="popup">
+
+                    <div class="popup-title">
+                        <?= htmlspecialchars($lang['success'], ENT_QUOTES, 'UTF-8') ?>
+                    </div>
+
+                    <div>
+                        <?= htmlspecialchars(
+                            $success,
+                            ENT_QUOTES,
+                            'UTF-8'
+                        ) ?>
+                    </div>
+
+                </div>
+
+            <?php endif; ?>
+
+
+            <div class="divider"></div>
+
+
+            <div class="form-heading">
+                <?= htmlspecialchars($lang['make_offer'], ENT_QUOTES, 'UTF-8') ?>
+            </div>
+
+            <div class="form-description">
+                <?= htmlspecialchars($lang['form_description'], ENT_QUOTES, 'UTF-8') ?>
+            </div>
+
+
+            <form
+                id="proposalForm"
+                action="./actions/submit.php"
+                method="POST"
+                class="offer-form"
+            >
+
+                <div class="field">
+
+                    <label for="name">
+                        <?= htmlspecialchars($lang['name'], ENT_QUOTES, 'UTF-8') ?>
+                    </label>
+
+                    <input
+                        id="name"
+                        type="text"
+                        name="name"
+                        placeholder="<?= htmlspecialchars($lang['name_placeholder'], ENT_QUOTES, 'UTF-8') ?>"
+                        value="<?= htmlspecialchars(
+                            $name,
+                            ENT_QUOTES,
+                            'UTF-8'
+                        ) ?>"
+                        autocomplete="name"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="field">
+
+                    <label for="email">
+                        <?= htmlspecialchars($lang['email'], ENT_QUOTES, 'UTF-8') ?>
+                    </label>
+
+                    <input
+                        id="email"
+                        type="email"
+                        name="email"
+                        placeholder="<?= htmlspecialchars($lang['email_placeholder'], ENT_QUOTES, 'UTF-8') ?>"
+                        value="<?= htmlspecialchars(
+                            $email,
+                            ENT_QUOTES,
+                            'UTF-8'
+                        ) ?>"
+                        autocomplete="email"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="field">
+
+                    <label for="message">
+                        <?= htmlspecialchars($lang['proposal'], ENT_QUOTES, 'UTF-8') ?>
+                    </label>
+
+                    <textarea
+                        id="message"
+                        name="message"
+                        rows="5"
+                        placeholder="<?= htmlspecialchars($lang['message_placeholder'], ENT_QUOTES, 'UTF-8') ?>"
+                        required
+                    ><?= htmlspecialchars(
+                        $message,
+                        ENT_QUOTES,
+                        'UTF-8'
+                    ) ?></textarea>
+
+                </div>
+
+
+                <button type="submit">
+
+                    <span>
+                        <?= htmlspecialchars($lang['send'], ENT_QUOTES, 'UTF-8') ?>
+                    </span>
+
+                    <span class="button-arrow">
+                        →
+                    </span>
+
+                </button>
+
+            </form>
+
+
+            <div class="privacy-note">
+                <?= htmlspecialchars($lang['privacy'], ENT_QUOTES, 'UTF-8') ?>
+            </div>
+
+        </section>
+
+
+        <footer>
+            © <?= date('Y') ?>
+            <?= htmlspecialchars(
+                $site['domain'],
+                ENT_QUOTES,
+                'UTF-8'
+            ) ?>
+        </footer>
+
+    </main>
+
+
     <script src="./js/index.js"></script>
-  </body>
+
+</body>
 </html>

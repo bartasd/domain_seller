@@ -3,5 +3,13 @@ const popup = document.getElementById('popup');
 if (popup) {
     setTimeout(() => {
         popup.remove();
-    }, 10000);
+    }, 3000);
 }
+
+document.addEventListener('keydown', function (event) {
+
+    if (event.key === 'Enter') {
+        document.querySelector('#proposalForm').requestSubmit();
+    }
+
+});

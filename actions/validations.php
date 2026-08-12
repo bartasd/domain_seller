@@ -26,21 +26,22 @@ function valid_message(string $message): bool
 function validate_form(
     string $name,
     string $email,
-    string $message
+    string $message,
+    array $lang
 ): array {
 
     $errors = [];
 
     if (!valid_name($name)) {
-        $errors[] = "Invalid name: $name";
+        $errors[] = $lang['invalid_name'];
     }
 
     if (!valid_email($email)) {
-        $errors[] = "Invalid email: $email";
+        $errors[] = $lang['invalid_email'];
     }
 
     if (!valid_message($message)) {
-        $errors[] = "Invalid message: $message";
+        $errors[] = $lang['invalid_message'];
     }
 
     return $errors;

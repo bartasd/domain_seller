@@ -1,5 +1,9 @@
 <?php
     session_start();
+
+    // GET LANGUAGE FILE
+    $lang = require_once __DIR__ . '/language.php';
+
     // GET VALIDATION FUNCTIONS
     require './validations.php';
 
@@ -21,7 +25,7 @@
     ];
 
     // VALIDATE FORM
-    $errors = validate_form($name, $email, $message);
+    $errors = validate_form($name, $email, $message, $lang);
 
     if (!empty($errors)) {
         $_SESSION['errors'] = $errors;
@@ -34,7 +38,7 @@
     }
     else{
         $_SESSION['success'] = 'Message sent successfully.';
-        
+        unset($_SESSION['old']);
         // SEND EMAIL TO NOTIFY ME ABOUT NEW MESSAGE
         send_email($name, $email, $message);
     }

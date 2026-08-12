@@ -29,7 +29,7 @@ return [
     'site' => [
         'title' => $_ENV['SITE_TITLE'],
         'domain' => $_ENV['SITE_DOMAIN'],
-        'description' => $_ENV['SITE_DESCRIPTION']
+        'description' => $_ENV['SITE_DESCRIPTION'],
     ],
     'server' => [
         // LATER MAKE IT UNIQUE TO YOUR SERVER, FOR EXAMPLE: 'https://yourdomain.com'
