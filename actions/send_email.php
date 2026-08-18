@@ -4,17 +4,16 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
 require_once __DIR__ . '/../vendor/autoload.php';
-
-$config = require_once __DIR__ . '/../config/config.php';
-
+require_once __DIR__ . '/get_message.php';
 
 function send_email(
-    string $name,
-    string $email,
-    string $message
+    int $id,
+    array $config
 ): bool {
 
     $mail = new PHPMailer(true);
+
+    $info = get_message($id, $config);
 
     try {
 
@@ -27,25 +26,24 @@ function send_email(
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port       = $config['mail']['smtp_port'];
 
-
         // Sender
         $mail->setFrom(
-            $config['mail']['sender']['email'],
+            $config['mail']['sender']['email'], 
             $config['mail']['sender']['name']
         );
 
 
         // Recipient
         $mail->addAddress(
-            $config['mail']['recipient']['email'],
-            $config['mail']['recipient']['name']
+            $config['mail']['recipient']['email'], 
+            $config['mail']['recipient']['name']  
         );
 
 
         // Reply directly to proposer
         $mail->addReplyTo(
-            $email,
-            $name
+            $info['email'],
+            $info['name']
         );
 
 
@@ -53,20 +51,20 @@ function send_email(
          * Escape user input before putting it into HTML.
          */
         $safeName = htmlspecialchars(
-            $name,
+            $info['name'],
             ENT_QUOTES | ENT_SUBSTITUTE,
             'UTF-8'
         );
 
         $safeEmail = htmlspecialchars(
-            $email,
+            $info['email'],
             ENT_QUOTES | ENT_SUBSTITUTE,
             'UTF-8'
         );
 
         $safeMessage = nl2br(
             htmlspecialchars(
-                $message,
+                $info['message'],
                 ENT_QUOTES | ENT_SUBSTITUTE,
                 'UTF-8'
             )
@@ -228,10 +226,10 @@ HTML;
          */
         $mail->AltBody =
             "New Domain Proposition\n\n" .
-            "Name: " . $name . "\n" .
-            "Email: " . $email . "\n\n" .
+            "Name: " . $info['name'] . "\n" .
+            "Email: " . $info['email'] . "\n\n" .
             "Proposition:\n" .
-            $message;
+            $info['message'];
 
 
         $mail->send();

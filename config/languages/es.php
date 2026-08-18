@@ -36,4 +36,6 @@ return [
 
     'error' => 'Algo salió mal.',
 
+    'rate_limit_exceeded' => 'Ha superado el número máximo de propuestas permitidas. Por favor, inténtelo de nuevo más tarde.',
+
 ];

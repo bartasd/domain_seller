@@ -1,14 +1,7 @@
 <?php
 
-function store(
-    string $name,
-    string $email,
-    string $message,
-    string $ip,
-    string $domain,
-    array $config
-): ?int {
-
+function get_message(int $id, array $config): ?array
+{
     $host = $config['db']['host'];
     $database = $config['db']['name'];
     $username = $config['db']['user'];
@@ -27,42 +20,31 @@ function store(
             PDO::ERRMODE_EXCEPTION
         );
 
-
         $sql = "
-            INSERT INTO messages (
+            SELECT
                 name,
                 email,
-                message,
-                ip,
-                domain
-            )
-            VALUES (
-                :name,
-                :email,
-                :message,
-                :ip,
-                :domain
-            )
+                message
+            FROM messages
+            WHERE id = :id
+            LIMIT 1
         ";
-
 
         $statement = $pdo->prepare($sql);
 
-
         $statement->execute([
-            ':name' => $name,
-            ':email' => $email,
-            ':message' => $message,
-            ':ip' => $ip,
-            ':domain' => $domain
+            ':id' => $id
         ]);
 
+        $message = $statement->fetch(PDO::FETCH_ASSOC);
 
-        return (int) $pdo->lastInsertId();
+        if ($message === false) {
+            return null;
+        }
 
+        return $message;
 
     } catch (PDOException $e) {
-
         return null;
     }
 }

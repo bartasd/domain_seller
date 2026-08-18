@@ -36,4 +36,6 @@ return [
 
     'error' => 'Įvyko klaida.',
 
+    'rate_limit_exceeded' => 'Jūs viršijote leistiną pasiūlymų skaičių. Prašome pabandyti vėliau.',
+
 ];

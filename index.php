@@ -1,9 +1,10 @@
 <?php
   session_start();
-  $lang = require_once __DIR__ . '/actions/language.php';
-  $config = require_once __DIR__ . '/config/config.php';
+  $lang = require __DIR__ . '/actions/language.php';
+  $config = require __DIR__ . '/config/config.php';
 
-  $site = $config['site'];
+  $local_project_name = $config['site']['local_url'];
+  $domain = $_SERVER['HTTP_HOST'] === 'localhost' ? "localhost/$local_project_name" : $_SERVER['HTTP_HOST'];
 
   $errors = $_SESSION['errors'] ?? null;
   $success = $_SESSION['success'] ?? null;
@@ -26,7 +27,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>
-        <?= htmlspecialchars($site['title'], ENT_QUOTES, 'UTF-8') ?>
+        <?= htmlspecialchars($domain, ENT_QUOTES, 'UTF-8') ?>
     </title>
 
     <link
@@ -80,11 +81,11 @@
             </div>
 
             <h1>
-                <?= htmlspecialchars($site['domain'], ENT_QUOTES, 'UTF-8') ?>
+                <?= htmlspecialchars($domain, ENT_QUOTES, 'UTF-8') ?>
             </h1>
 
             <p class="description">
-                <?= htmlspecialchars($site['description'], ENT_QUOTES, 'UTF-8') ?>
+                <?= htmlspecialchars($lang['description'], ENT_QUOTES, 'UTF-8') ?>
             </p>
 
 
@@ -244,7 +245,7 @@
         <footer>
             © <?= date('Y') ?>
             <?= htmlspecialchars(
-                $site['domain'],
+                $domain,
                 ENT_QUOTES,
                 'UTF-8'
             ) ?>

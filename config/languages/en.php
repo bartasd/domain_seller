@@ -36,4 +36,6 @@ return [
 
     'error' => 'Something went wrong.',
 
+    'rate_limit_exceeded' => 'You have exceeded the maximum number of proposals allowed. Please try again later.',
+
 ];
