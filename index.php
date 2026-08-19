@@ -1,7 +1,13 @@
 <?php
   session_start();
-  $lang = require __DIR__ . '/actions/language.php';
   $config = require __DIR__ . '/config/config.php';
+
+  // initiate resend messages worker:
+  require __DIR__ . '/actions/resend_messages.php';
+  check_worker_state($config);
+  
+  $state = require __DIR__ . '/actions/state.php';
+  $lang = require __DIR__ . '/actions/language.php';
 
   $local_project_name = $config['site']['local_url'];
   $domain = $_SERVER['HTTP_HOST'] === 'localhost' ? "localhost/$local_project_name" : $_SERVER['HTTP_HOST'];
@@ -85,7 +91,11 @@
             </h1>
 
             <p class="description">
-                <?= htmlspecialchars($lang['description'], ENT_QUOTES, 'UTF-8') ?>
+                 <?php if ($state === State::NORMAL): ?>
+                    <?= htmlspecialchars($lang['description'], ENT_QUOTES, 'UTF-8') ?>
+                <?php elseif ($state === State::LIMITED): ?>
+                    <?= htmlspecialchars($lang['limited_description'], ENT_QUOTES, 'UTF-8') ?>
+                <?php endif; ?>
             </p>
 
 
@@ -136,103 +146,105 @@
 
             <div class="divider"></div>
 
+            <?php if ($state === State::NORMAL): ?>
 
-            <div class="form-heading">
-                <?= htmlspecialchars($lang['make_offer'], ENT_QUOTES, 'UTF-8') ?>
-            </div>
+                <div class="form-heading">
+                    <?= htmlspecialchars($lang['make_offer'], ENT_QUOTES, 'UTF-8') ?>
+                </div>
 
-            <div class="form-description">
-                <?= htmlspecialchars($lang['form_description'], ENT_QUOTES, 'UTF-8') ?>
-            </div>
+                <div class="form-description">
+                    <?= htmlspecialchars($lang['form_description'], ENT_QUOTES, 'UTF-8') ?>
+                </div>
+
+            
+                <form
+                    id="proposalForm"
+                    action="./actions/submit.php"
+                    method="POST"
+                    class="offer-form"
+                >
+
+                    <div class="field">
+
+                        <label for="name">
+                            <?= htmlspecialchars($lang['name'], ENT_QUOTES, 'UTF-8') ?>
+                        </label>
+
+                        <input
+                            id="name"
+                            type="text"
+                            name="name"
+                            placeholder="<?= htmlspecialchars($lang['name_placeholder'], ENT_QUOTES, 'UTF-8') ?>"
+                            value="<?= htmlspecialchars(
+                                $name,
+                                ENT_QUOTES,
+                                'UTF-8'
+                            ) ?>"
+                            autocomplete="name"
+                            required
+                        >
+
+                    </div>
 
 
-            <form
-                id="proposalForm"
-                action="./actions/submit.php"
-                method="POST"
-                class="offer-form"
-            >
+                    <div class="field">
 
-                <div class="field">
+                        <label for="email">
+                            <?= htmlspecialchars($lang['email'], ENT_QUOTES, 'UTF-8') ?>
+                        </label>
 
-                    <label for="name">
-                        <?= htmlspecialchars($lang['name'], ENT_QUOTES, 'UTF-8') ?>
-                    </label>
+                        <input
+                            id="email"
+                            type="email"
+                            name="email"
+                            placeholder="<?= htmlspecialchars($lang['email_placeholder'], ENT_QUOTES, 'UTF-8') ?>"
+                            value="<?= htmlspecialchars(
+                                $email,
+                                ENT_QUOTES,
+                                'UTF-8'
+                            ) ?>"
+                            autocomplete="email"
+                            required
+                        >
 
-                    <input
-                        id="name"
-                        type="text"
-                        name="name"
-                        placeholder="<?= htmlspecialchars($lang['name_placeholder'], ENT_QUOTES, 'UTF-8') ?>"
-                        value="<?= htmlspecialchars(
-                            $name,
+                    </div>
+
+
+                    <div class="field">
+
+                        <label for="message">
+                            <?= htmlspecialchars($lang['proposal'], ENT_QUOTES, 'UTF-8') ?>
+                        </label>
+
+                        <textarea
+                            id="message"
+                            name="message"
+                            rows="5"
+                            placeholder="<?= htmlspecialchars($lang['message_placeholder'], ENT_QUOTES, 'UTF-8') ?>"
+                            required
+                        ><?= htmlspecialchars(
+                            $message,
                             ENT_QUOTES,
                             'UTF-8'
-                        ) ?>"
-                        autocomplete="name"
-                        required
-                    >
+                        ) ?></textarea>
 
-                </div>
+                    </div>
 
 
-                <div class="field">
+                    <button type="submit">
 
-                    <label for="email">
-                        <?= htmlspecialchars($lang['email'], ENT_QUOTES, 'UTF-8') ?>
-                    </label>
+                        <span>
+                            <?= htmlspecialchars($lang['send'], ENT_QUOTES, 'UTF-8') ?>
+                        </span>
 
-                    <input
-                        id="email"
-                        type="email"
-                        name="email"
-                        placeholder="<?= htmlspecialchars($lang['email_placeholder'], ENT_QUOTES, 'UTF-8') ?>"
-                        value="<?= htmlspecialchars(
-                            $email,
-                            ENT_QUOTES,
-                            'UTF-8'
-                        ) ?>"
-                        autocomplete="email"
-                        required
-                    >
+                        <span class="button-arrow">
+                            →
+                        </span>
 
-                </div>
+                    </button>
 
-
-                <div class="field">
-
-                    <label for="message">
-                        <?= htmlspecialchars($lang['proposal'], ENT_QUOTES, 'UTF-8') ?>
-                    </label>
-
-                    <textarea
-                        id="message"
-                        name="message"
-                        rows="5"
-                        placeholder="<?= htmlspecialchars($lang['message_placeholder'], ENT_QUOTES, 'UTF-8') ?>"
-                        required
-                    ><?= htmlspecialchars(
-                        $message,
-                        ENT_QUOTES,
-                        'UTF-8'
-                    ) ?></textarea>
-
-                </div>
-
-
-                <button type="submit">
-
-                    <span>
-                        <?= htmlspecialchars($lang['send'], ENT_QUOTES, 'UTF-8') ?>
-                    </span>
-
-                    <span class="button-arrow">
-                        →
-                    </span>
-
-                </button>
-
-            </form>
+                </form>
+            <?php endif; ?>
 
 
             <div class="privacy-note">

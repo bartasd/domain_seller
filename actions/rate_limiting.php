@@ -119,7 +119,7 @@ function check_submit_limit(
     }
 }
 
-function check_email_sent(array $config): bool
+function check_email_limit(array $config): bool
 {
     $host = $config['db']['host'];
     $database = $config['db']['name'];
@@ -149,7 +149,8 @@ function check_email_sent(array $config): bool
 
         $statement = $pdo->query($sql);
 
-        return (int) $statement->fetchColumn() <= $config['limits']['email_limit_daily'];
+        $queryNumber = (int) $statement->fetchColumn();
+        return $queryNumber < $config['limits']['email_limit_daily'];
 
     } catch (PDOException $e) {
 

@@ -6,6 +6,8 @@ return [
 
     'description' => 'This domain is for sale. Contact us below to make an offer.',
 
+    'limited_description' => 'This domain is for sale, but unfortunately, we are currently experiencing a high volume of inquiries. Please try again later.',
+
     'make_offer' => 'Make an offer',
 
     'form_description' => 'Interested in this domain? Send your proposal below.',

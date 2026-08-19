@@ -4,6 +4,8 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+// GET STATE
+$state = require __DIR__ . '/state.php';
 
 // GET CONFIG
 $config = require __DIR__ . '/../config/config.php';
@@ -115,7 +117,7 @@ else {
     if ($id !== null) {
 
         // CHECK EMAIL RATE LIMMITS
-        $let_send = check_email_sent($config);
+        $let_send = check_email_limit($config);
 
         if ($let_send && send_email($id, $config)) {
             email_sent($id, $config);
@@ -125,6 +127,7 @@ else {
         else{
             // EMAIL NOT SENT
             // PREPARE WORKER FOR MESSAGE ID = $id
+            invert_state($state);
         }
 
     }

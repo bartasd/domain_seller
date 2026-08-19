@@ -6,6 +6,8 @@ return [
 
     'description' => 'Šis domenas parduodamas. Susisiekite su mumis ir pateikite savo pasiūlymą.',
 
+    'limited_description' => 'Šis domenas parduodamas, tačiau šiuo metu patiriame didelį užklausų srautą. Prašome pabandyti vėliau.',
+
     'make_offer' => 'Pateikite pasiūlymą',
 
     'form_description' => 'Domina šis domenas? Pateikite savo pasiūlymą žemiau.',

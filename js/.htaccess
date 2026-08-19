@@ -1,1 +1,2 @@
+# Don't expose directory contents
 Options -Indexes

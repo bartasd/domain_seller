@@ -6,6 +6,8 @@ return [
 
     'description' => 'Este dominio está en venta. Contáctenos a continuación para hacer una oferta.',
 
+    'limited_description' => 'Este dominio está en venta, pero desafortunadamente, actualmente estamos experimentando un alto volumen de consultas. Por favor, inténtelo de nuevo más tarde.',
+
     'make_offer' => 'Hacer una oferta',
 
     'form_description' => '¿Interesado en este dominio? Envíe su propuesta a continuación.',

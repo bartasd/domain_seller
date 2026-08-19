@@ -1,1 +1,5 @@
 Options -Indexes
+
+<FilesMatch "^(?!language\.php$|submit\.php$).+">
+    Require all denied
+</FilesMatch>
