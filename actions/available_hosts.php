@@ -3,6 +3,7 @@
 function checkWhitelist(string $domain, array $config): bool
 {
     $host = $config['db']['host'];
+    $port = $config['db']['port'];
     $database = $config['db']['name'];
     $username = $config['db']['user'];
     $password = $config['db']['pass'];
@@ -10,7 +11,7 @@ function checkWhitelist(string $domain, array $config): bool
     try {
 
         $pdo = new PDO(
-            "mysql:host=$host;dbname=$database;charset=utf8mb4",
+            "mysql:host=$host;port=$port;dbname=$database;charset=utf8mb4",
             $username,
             $password
         );

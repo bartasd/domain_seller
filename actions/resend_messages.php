@@ -6,6 +6,7 @@ require __DIR__ . '/email_sent.php';
 function resend_messages(array $config): void
 {
     $host = $config['db']['host'];
+    $port = $config['db']['port'];
     $database = $config['db']['name'];
     $username = $config['db']['user'];
     $password = $config['db']['pass'];
@@ -13,7 +14,7 @@ function resend_messages(array $config): void
     try {
 
         $pdo = new PDO(
-            "mysql:host=$host;dbname=$database;charset=utf8mb4",
+            "mysql:host=$host;port=$port;dbname=$database;charset=utf8mb4",
             $username,
             $password
         );
@@ -52,7 +53,7 @@ function resend_messages(array $config): void
 }
 
 function check_worker_state(array $config){
-    $file = __DIR__ . '/../config/last_resend_worker_run_at';
+    $file = __DIR__ . '/../config/worker_date.txt';
     $lastDate = trim(file_get_contents($file));
     $now = date('Y-m-d');
     if($lastDate != $now){

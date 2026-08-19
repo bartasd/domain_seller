@@ -6,6 +6,7 @@ $data = <<<'ENV'
 # DATABASE DATA
 
 DB_HOST=localhost
+DB_PORT=3306
 DB_NAME=database_name
 DB_USER=database_user
 DB_PASS=database_password

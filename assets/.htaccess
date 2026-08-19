@@ -1,5 +1,0 @@
-# Don't expose directory contents
-Options -Indexes
-
-# Don't allow web access
-Require all denied
