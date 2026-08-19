@@ -2,6 +2,14 @@
   session_start();
   $config = require __DIR__ . '/config/config.php';
 
+  // check ip statistics && CUT SHORTLY
+  require __DIR__ . '/actions/ip_statistics.php';
+  $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+  if(checkBlacklist($ip, $config)){
+    var_dump("YOUR IP WAS BLACKLISTED. TOO MANY ATTEMPTS");
+    die;
+  }
+
   // initiate resend messages worker:
   require __DIR__ . '/actions/resend_messages.php';
   check_worker_state($config);
@@ -11,6 +19,13 @@
 
   $local_project_name = $config['site']['local_url'];
   $domain = $_SERVER['HTTP_HOST'] === 'localhost' ? "localhost/$local_project_name" : $_SERVER['HTTP_HOST'];
+
+  require __DIR__ . '/actions/available_hosts.php';
+
+  if(!checkWhitelist($domain, $config)){
+    var_dump("YOUR DOMAIN $domain IS NOT WHITELISTED. I ONLY SELL MY DOMAINS");
+    die;
+  }
 
   $errors = $_SESSION['errors'] ?? null;
   $success = $_SESSION['success'] ?? null;
@@ -265,6 +280,21 @@
 
     </main>
 
+    <div class="cookie-consent" id="cookieConsent" hidden>
+        <div class="cookie-content">
+            <div>
+                <strong>Cookies</strong>
+                <p>
+                    We use cookies to remember your preferences and
+                    improve your experience.
+                </p>
+            </div>
+
+            <button type="button" id="acceptCookies">
+                Accept
+            </button>
+        </div>
+    </div>
 
     <script src="./js/index.js"></script>
 

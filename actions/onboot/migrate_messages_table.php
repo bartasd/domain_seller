@@ -2,6 +2,7 @@
 
 $config = require_once __DIR__ . '/../../config/config.php';
 
+
 function get_database(array $config): PDO
 {
     $db = $config['db'];
@@ -21,7 +22,7 @@ function get_database(array $config): PDO
 }
 
 
-function migrate(array $config): void
+function migrateMessages(array $config): void
 {
     $pdo = get_database($config);
 
@@ -50,10 +51,67 @@ function migrate(array $config): void
 
             email_send_retries INT UNSIGNED NOT NULL
                 DEFAULT 0,
+
+            INDEX idx_ip_created_at (
+                ip,
+                created_at
+            ),
+
+            INDEX idx_domain_created_at (
+                domain,
+                created_at
+            )
         )
     ";
 
     $pdo->exec($sql);
 }
 
-migrate($config);
+
+function migrateIPretries(array $config): void
+{
+    $pdo = get_database($config);
+
+    $sql = "
+        CREATE TABLE IF NOT EXISTS ip_retries (
+
+            ip VARCHAR(45) PRIMARY KEY,
+
+            retries INT UNSIGNED NOT NULL
+                DEFAULT 0
+        )
+    ";
+
+    $pdo->exec($sql);
+}
+
+
+function migrateDomains(array $config): void
+{
+    $pdo = get_database($config);
+
+    $sql = "
+        CREATE TABLE IF NOT EXISTS domains (
+
+            id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+
+            domain VARCHAR(255) NOT NULL UNIQUE,
+
+            created_at DATETIME NOT NULL
+                DEFAULT CURRENT_TIMESTAMP
+        )
+    ";
+
+    $pdo->exec($sql);
+}
+
+
+function migrateAll(array $config): void
+{
+    migrateMessages($config);
+    migrateIPretries($config);
+    migrateDomains($config);
+}
+
+
+migrateAll($config);
